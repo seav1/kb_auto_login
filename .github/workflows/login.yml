@@ -1,0 +1,38 @@
+name: Login to Koyeb
+
+on:
+  schedule:
+    - cron: '0 0 */10 * *'
+  workflow_dispatch:
+
+jobs:
+  login:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to Koyeb
+      run: |
+        IFS=';' read -ra ACCOUNTS <<< "${{ secrets.KOYEB_ACCOUNTS }}"
+
+        for ACCOUNT in "${ACCOUNTS[@]}"; do
+          IFS=',' read -ra CREDENTIALS <<< "$ACCOUNT"
+          EMAIL="${CREDENTIALS[0]}"
+          PASSWORD="${CREDENTIALS[1]}"
+
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://app.koyeb.com/auth/signin \
+          -H 'Content-Type: application/json' \
+          -d '{
+              "email": "$EMAIL",
+              "password": "$PASSWORD"
+          }')
+          sleep 5
+
+          if [ "$RESPONSE" -eq 200 ]; then
+            echo "Account $EMAIL logged in successfully."
+          else
+            echo "Failed to log in with account $EMAIL."
+          fi
+        done
