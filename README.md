@@ -1,1 +1,1 @@
-# kb_auto_login
+GitHub Secrets 设置一个名为 KOYEB_ACCOUNTS 的变量，该变量包含了所有账号的用户名和密码，每个账号的用户名和密码用逗号(,)分隔，不同的账号之间用分号(;)分隔
