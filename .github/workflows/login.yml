@@ -15,6 +15,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+        
+    - name: Delete workflow runs
+      uses: Mattraks/delete-workflow-runs@v2
+       with:
+         token: ${{ github.token }}
+         repository: ${{ github.repository }}
+         retain_days: 0
+         keep_minimum_runs: 3      
 
     - name: Login to Koyeb
       run: |
@@ -39,11 +47,4 @@ jobs:
             echo "Failed to log in with account $EMAIL."
           fi
         done
-        
-      - name: Delete workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 0
-          keep_minimum_runs: 3
+
