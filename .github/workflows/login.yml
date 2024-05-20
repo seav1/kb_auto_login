@@ -2,7 +2,7 @@ name: Login to Koyeb
 
 on:
   schedule:
-    - cron: '0 0 */7 * *'
+    - cron: '0 0 */5 * *'
   workflow_dispatch:
 
 jobs:
