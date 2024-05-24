@@ -2,7 +2,7 @@ name: Koyeb Login
 
 on:
   schedule:
-    - cron: '0 0 * * 1' # 每周一 UTC 时间 0 点运行
+    - cron: '0 0 * * 1' # Every Monday UTC 00:00
   workflow_dispatch:
 
 jobs:
@@ -10,22 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Install Koyeb CLI
-        uses: koyeb-community/install-koyeb-cli@v2
+    - name: Install Koyeb CLI
+      uses: koyeb-community/install-koyeb-cli@v2
 
-      - name: Login to Koyeb
-        env:
-          KOYEB_API_KEYS: ${{ secrets.KOYEB_API_KEYS }}
-        run: |
-          mkdir -p ~/.koyeb
-          IFS=',' read -r -a api_keys <<< "$KOYEB_API_KEYS"
-          for api_key in "${api_keys[@]}"; do
-            echo 'cat <<EOF > ~/.koyeb.yaml
-api_key: $api_key
-EOF' | bash
-            # Verify the login
-            koyeb -k $api_key apps list
-          done
+    - name: Login to Koyeb
+      env:
+        KOYEB_API_KEYS: ${{ secrets.KOYEB_API_KEYS }}
+      run: |
+        mkdir -p ~/.koyeb
+        IFS=',' read -r -a api_keys <<< "$KOYEB_API_KEYS"
+        for api_key in "${api_keys[@]}"; do
+          echo "api_key: $api_key" >> ~/.koyeb.yaml
+          # Verify the login
+          koyeb -k $api_key apps list
+        done
