@@ -20,7 +20,12 @@ jobs:
       env:
         KOYEB_API_KEYS: ${{ secrets.KOYEB_API_KEYS }}
       run: |
+        mkdir -p ~/.koyeb
         IFS=',' read -r -a api_keys <<< "$KOYEB_API_KEYS"
         for api_key in "${api_keys[@]}"; do
-          koyeb login --token "$api_key"
+          cat <<EOF > ~/.koyeb.yaml
+api_key: $api_key
+EOF
+          # Verify the login
+          koyeb apps list
         done
