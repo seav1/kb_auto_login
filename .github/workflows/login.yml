@@ -1,8 +1,10 @@
 name: Weekly Login to Koyeb
 on:
   schedule:
-    - cron: '0 0 * * 0' 
+    - cron: '0 0 * * 0'
   workflow_dispatch:
+  
+jobs:
   login:
     runs-on: ubuntu-latest
     steps:
@@ -16,7 +18,9 @@ on:
         run: |
           IFS=',' read -ra TOKENS <<< "${{ secrets.KOYEB_TOKENS }}"
           for TOKEN in "${TOKENS[@]}"; do
-            echo "Logging in with token: $TOKEN"
+            echo "Using token: $TOKEN"
             echo "::add-mask::$TOKEN"
-            koyeb login --token $TOKEN
+            KOYEB_API_TOKEN=$TOKEN koyeb apps list || exit 1
           done
+        env:
+          KOYEB_API_TOKEN: ${{ secrets.KOYEB_TOKENS }}
