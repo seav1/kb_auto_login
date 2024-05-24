@@ -1,27 +1,25 @@
-name: Koyeb Login
-
+name: Login to Koyeb
 on:
   schedule:
-    - cron: '0 0 * * 1' # Every Monday UTC 00:00
-  workflow_dispatch:
+    - cron:  '0 0 * * 0'
 
 jobs:
   login:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Install Koyeb CLI
-      uses: koyeb-community/install-koyeb-cli@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-    - name: Login to Koyeb
-      env:
-        KOYEB_API_KEYS: ${{ secrets.KOYEB_API_KEYS }}
-      run: |
-        mkdir -p ~/.koyeb
-        IFS=',' read -r -a api_keys <<< "$KOYEB_API_KEYS"
-        for api_key in "${api_keys[@]}"; do
-          echo "api_key: $api_key" >> ~/.koyeb.yaml
-        done
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Login to Koyeb
+        run: node login.js
+        env:
+          USERNAMES: ${{ secrets.USERNAMES }}
+          PASSWORDS: ${{ secrets.PASSWORDS }}
