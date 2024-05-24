@@ -9,8 +9,7 @@ const { chromium } = require('playwright');
   const passwords = process.env.PASSWORDS.split(',');
 
   for (let i = 0; i < usernames.length; i++) {
-    await page.goto('https://app.koyeb.com/login', {timeout: 60000});
-    await page.waitForSelector('input[name="email"]');
+    await page.goto('https://app.koyeb.com/auth/signin');
     await page.fill('input[name="email"]', usernames[i]);
     await page.fill('input[name="password"]', passwords[i]);
     await page.click('button[type="submit"]');
