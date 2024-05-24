@@ -2,7 +2,8 @@ name: Login to Koyeb
 on:
   schedule:
     - cron:  '0 0 * * 0'
-
+  workflow_dispatch:
+  
 jobs:
   login:
     runs-on: ubuntu-latest
