@@ -22,5 +22,5 @@ jobs:
       run: |
         IFS=',' read -r -a api_keys <<< "$KOYEB_API_KEYS"
         for api_key in "${api_keys[@]}"; do
-          koyeb auth login --api-key "$api_key"
+          koyeb login --api-key "$api_key"
         done
