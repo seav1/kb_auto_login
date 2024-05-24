@@ -1,1 +1,1 @@
-GitHub Secrets 设置一个名为 KOYEB_ACCOUNTS 的变量，该变量包含了所有账号的用户名和密码，每个账号的用户名和密码用逗号(,)分隔，不同的账号之间用分号(;)分隔
+GitHub Secrets 设置一个名为KOYEB_API_TOKENS，并将多个 API 令牌以逗号分隔粘贴到 Value 字段中，例如：token1,token2,token3，
