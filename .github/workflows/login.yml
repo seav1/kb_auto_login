@@ -1,49 +1,27 @@
-name: Login to Koyeb
+name: Weekly Koyeb Login
 
 on:
   schedule:
-    - cron: '0 0 */5 * *'
-  workflow_dispatch:
+    - cron: '0 0 * * 0'  # 每周日0点运行
+  workflow_dispatch:  # 手动触发工作流
 
 jobs:
   login:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-        
-    - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
       with:
-        token: ${{ github.token }}
-        repository: ${{ github.repository }}
-        retain_days: 0
-        keep_minimum_runs: 2      
+        python-version: '3.x'
 
-    - name: Login to Koyeb
-      run: |
-        IFS=';' read -ra ACCOUNTS <<< "${{ secrets.KOYEB_ACCOUNTS }}"
+    - name: Install dependencies
+      run: pip install requests
 
-        for ACCOUNT in "${ACCOUNTS[@]}"; do
-          IFS=',' read -ra CREDENTIALS <<< "$ACCOUNT"
-          EMAIL="${CREDENTIALS[0]}"
-          PASSWORD="${CREDENTIALS[1]}"
-
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://app.koyeb.com/auth/signin \
-          -H 'Content-Type: application/json' \
-          -d '{
-              "email": "$EMAIL",
-              "password": "$PASSWORD"
-          }')
-          sleep 5
-
-          if [ "$RESPONSE" -eq 200 ]; then
-            echo "Account $EMAIL logged in successfully."
-          else
-            echo "Failed to log in with account $EMAIL."
-          fi
-        done
+    - name: Run Koyeb login script
+      env:
+        KOYEB_API_TOKENS: ${{ secrets.KOYEB_API_TOKENS }}  # 在 GitHub secrets 中设置你的多个 Koyeb API tokens，以逗号分隔
+      run: python3 login_to_koyeb.py
