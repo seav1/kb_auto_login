@@ -2,7 +2,7 @@ import os
 import requests
 
 def login_to_koyeb(api_token):
-    url = "https://app.koyeb.com/v1/account"
+    url = "https://app.koyeb.com/v1/account/oauth"
     headers = {
         "Authorization": f"Bearer {api_token}",
         "Content-Type": "application/json"
