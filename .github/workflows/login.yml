@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install Koyeb CLI
         uses: koyeb-community/install-koyeb-cli@v2
@@ -20,7 +20,7 @@ jobs:
           for TOKEN in "${TOKENS[@]}"; do
             echo "Using token: $TOKEN"
             echo "::add-mask::$TOKEN"
-            KOYEB_API_TOKEN=$TOKEN koyeb login || exit 1
+            KOYEB_API_TOKEN=$TOKEN koyeb apps list --token || exit 1
           done
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_TOKENS }}
