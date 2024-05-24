@@ -14,6 +14,8 @@ const { chromium } = require('playwright');
     await page.fill('input[name="password"]', passwords[i]);
     await page.click('button[type="submit"]');
     await page.waitForNavigation();
+
+    console.log(`用户 ${usernames[i]} 登录成功！`);
   }
 
   await browser.close();
