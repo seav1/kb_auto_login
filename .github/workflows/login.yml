@@ -11,6 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install Koyeb CLI
+        uses: koyeb-community/install-koyeb-cli@v2
+        with:
+          api_token: ${{ secrets.KOYEB_TOKENS }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Login to Koyeb for multiple accounts
         run: |
           IFS=',' read -ra TOKENS <<< "${{ secrets.KOYEB_TOKENS }}"
@@ -19,7 +25,3 @@ jobs:
             echo "::add-mask::$TOKEN"
             echo $TOKEN | koyeb login
           done
-        uses: koyeb-community/install-koyeb-cli@v2
-        with:
-          api_token: ${{ secrets.KOYEB_TOKENS }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
