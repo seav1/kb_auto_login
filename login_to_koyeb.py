@@ -15,8 +15,11 @@ def login_to_koyeb(api_token):
         print(f"Failed to log in to Koyeb: {response.status_code} {response.text}")
 
 if __name__ == "__main__":
-    api_token = os.getenv("KOYEB_API_TOKEN")
-    if not api_token:
-        raise ValueError("KOYEB_API_TOKEN environment variable is not set")
+    api_tokens = os.getenv("KOYEB_API_TOKENS")
+    if not api_tokens:
+        raise ValueError("KOYEB_API_TOKENS environment variable is not set")
 
-    login_to_koyeb(api_token)
+    for token in api_tokens.split(','):
+        token = token.strip()
+        if token:
+            login_to_koyeb(token)
