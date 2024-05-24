@@ -10,22 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Install Koyeb CLI
-      uses: koyeb-community/install-koyeb-cli@v2
+      - name: Install Koyeb CLI
+        uses: koyeb-community/install-koyeb-cli@v2
 
-    - name: Login to Koyeb
-      env:
-        KOYEB_API_KEYS: ${{ secrets.KOYEB_API_KEYS }}
-      run: |
-        mkdir -p ~/.koyeb
-        IFS=',' read -r -a api_keys <<< "$KOYEB_API_KEYS"
-        for api_key in "${api_keys[@]}"; do
-          cat <<EOF > ~/.koyeb.yaml
+      - name: Login to Koyeb
+        env:
+          KOYEB_API_KEYS: ${{ secrets.KOYEB_API_KEYS }}
+        run: |
+          mkdir -p ~/.koyeb
+          IFS=',' read -r -a api_keys <<< "$KOYEB_API_KEYS"
+          for api_key in "${api_keys[@]}"; do
+            cat <<EOF > ~/.koyeb.yaml
 api_key: $api_key
 EOF
-          # Verify the login
-          koyeb apps list
-        done
+            # Verify the login
+            koyeb -k $api_key apps list
+          done
