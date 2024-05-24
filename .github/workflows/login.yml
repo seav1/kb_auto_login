@@ -1,7 +1,7 @@
 name: Weekly Login to Koyeb
 on:
   schedule:
-    - cron: '0 0 * * 0'  # 每周日的 00:00 运行
+    - cron: '0 0 * * 0'
   workflow_dispatch:
   
 jobs:
@@ -9,16 +9,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
       - name: Login to Koyeb for multiple accounts
         run: |
           IFS=',' read -ra TOKENS <<< "${{ secrets.KOYEB_TOKENS }}"
           for TOKEN in "${TOKENS[@]}"; do
-            echo "Logging in with token: $TOKEN"
+            echo "Installing Koyeb CLI and logging in with token: $TOKEN"
             echo "::add-mask::$TOKEN"
             echo $TOKEN | koyeb login
           done
-        env:
-          KOYEB_TOKEN: ${{ secrets.KOYEB_TOKENS }}
         uses: koyeb-community/install-koyeb-cli@v2
+        with:
+          api_token: ${{ secrets.KOYEB_TOKENS }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
